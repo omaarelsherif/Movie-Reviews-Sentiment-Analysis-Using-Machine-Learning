@@ -1,8 +1,8 @@
 ### Movie Reviews Sentiment Analysis ###
 """
 Description:
-              This machine learning project is based on natural language processing,
-              we will use bainary classifictaion to predict the movie sentiment based on text review
+              Movie reviews sentiment analysis is a project which is based on natural language processing, where we use NLP techniques to extract useful words of each review
+              and based on these words we can use binary classification to predict the movie sentiment if it's positive or negative
 """
 
 ## Importing modules ##
