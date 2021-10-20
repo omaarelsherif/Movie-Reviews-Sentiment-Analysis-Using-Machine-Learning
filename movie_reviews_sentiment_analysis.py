@@ -1,4 +1,4 @@
-### Movie Reviews Sentiment Analysis ###
+### Movie Reviews Sentiment Analysis | Training ###
 """
 Description:
               Movie reviews sentiment analysis is a project which is based on natural language processing, where we use NLP techniques to extract useful words of each review
@@ -16,6 +16,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB,MultinomialNB,BernoulliNB
 from sklearn.metrics import accuracy_score
+import joblib
 # nltk.download() # Download "punkt" package
 
 ## 1 | Data Preprocessing ##
@@ -62,7 +63,7 @@ def is_special(text):
     return rem
 
 dataset.review = dataset.review.apply(is_special)
-print(f"Review sample after removing special characters : \ndataset.review[0]\n")
+print(f"Review sample after removing special characters : \n{dataset.review[0]}\n")
 
 # 2.3 Convert everything to lowercase
 def to_lower(text):
@@ -94,7 +95,7 @@ print(f"Review sample after stemming the words : \n{dataset.review[0]}\n")
 # 3.1 Creating Bag Of Words (BOW)
 X = np.array(dataset.iloc[:,0].values)
 y = np.array(dataset.sentiment.values)
-cv = CountVectorizer(max_features = 1000)
+cv = CountVectorizer(max_features = 2000)
 X = cv.fit_transform(dataset.review).toarray()
 print(f"=== Bag of words ===\n")
 print(f"BOW X shape : {X.shape}")
@@ -111,14 +112,19 @@ gnb.fit(X_train, y_train)
 mnb.fit(X_train, y_train)
 bnb.fit(X_train, y_train)
 
-# 3.4 Prediction and accuracy metrics to choose best model
+# 3.4 Save the three models
+joblib.dump(gnb, "Models/MRSA_gnb.pkl")
+joblib.dump(mnb, "Models/MRSA_mnb.pkl")
+joblib.dump(bnb, "Models/MRSA_bnb.pkl")
+
+# 3.5 Make predictions
 ypg = gnb.predict(X_test)
 ypm = mnb.predict(X_test)
 ypb = bnb.predict(X_test)
 
 ## 4 | Model Evaluation ##
 """Evaluate model performance"""
-print(f"Gaussian accuracy    = {round(accuracy_score(y_test, ypg), 2)*100} %")
-print(f"Multinomial accuracy = {round(accuracy_score(y_test, ypm), 2)*100} %")
-print(f"Bernoulli accuracy   = {round(accuracy_score(y_test, ypb), 2)*100} %")
+print(f"Gaussian accuracy    =  {round(accuracy_score(y_test, ypg), 2)*100} %")
+print(f"Multinomial accuracy =  {round(accuracy_score(y_test, ypm), 2)*100} %")
+print(f"Bernoulli accuracy   =  {round(accuracy_score(y_test, ypb), 2)*100} %")
 
